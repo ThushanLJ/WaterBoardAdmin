@@ -1,28 +1,26 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth'
 import { Router } from '@angular/router';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class WaterboardService {
 
   authstate: any = null;
 
-  constructor(private afu: AngularFireAuth, private router: Router) {
-    this.afu.authState.subscribe((auth => {
-      this.authstate = auth;
-    }))
+  constructor(private db : AngularFirestore) {
+    
   }
 
   registerWithEmail(name: string, id: string, email: string, password: string) {
-
-    this.afu.createUserWithEmailAndPassword(email, password).then((user) => {
-      this.authstate = user
-    }).catch(error => {
-      console.log(error);
-      throw error
+    this.db.collection("User").add({
+        "name": name,
+        "id": id,
+        "email": email,
+        "password":password
     })
-
   }
 }
